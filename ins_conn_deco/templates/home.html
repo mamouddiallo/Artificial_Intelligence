@@ -11,7 +11,7 @@
     <div class="container">
         <div class="container-home">
             <h2>Welcome, {{ user.username }}!</h2>
-            <button><a href="{% url 'deconnexion' %}">Logout</a></button>
+            <button><a href="{% url 'index' %}">Logout</a></button>
         </div>
         <h2>You have a possibility to see the power of IA {{ user.username }}!</h2>
         <img src="{% static 'images/enregistrement/dog.jpeg' %}" alt="" width="90%" height="100%">
