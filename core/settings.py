@@ -27,7 +27,7 @@ SECRET_KEY = os.environ.get("SECRET_KEY", "secret_key")
 
 DEBUG = os.environ.get("DEBUG", True)
 
-ALLOWED_HOSTS = ['artificial-intelligence-2.onrender.com', 'http://127.0.0.1:8000/']
+ALLOWED_HOSTS = ['.onrender.com', 'http://127.0.0.1:8000/']
 
 
 # Application definition
