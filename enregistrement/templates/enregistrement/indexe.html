@@ -1,0 +1,177 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" nucontenu="IE=edge">
+    <meta name="viewport" width=device-width, initial-scale=1.0>
+    <title>Artificial Intelligence</title>
+	<link rel="stylesheet" href="{% static 'css/enregistrement/style.css'%}">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-container container">
+            <input type="checkbox" name="" id="">
+            <div class="hamburger-lines">
+                <span class="line line1"></span>
+                <span class="line line2"></span>
+                <span class="line line3"></span>
+            </div>
+            <ul class="menu-items">
+                <li><a href="#">About</a></li>
+                <li><a href="#">Benefits</a></li>
+                <li><a href="#">Limits</a></li>
+                <li><a href="#">The prospects</a></li>
+            </ul>
+            <h1 class="logo"><img src="{% static 'images/enregistrement/IA.png'%}" width="50px" height="30px"></h1>
+			<h1 class="logo"><span style="color:white;">Int.</span>
+				<span>_</span>
+				<span style="color: green;">Art.</span>
+			</h1>
+        </div>
+    </nav>
+	<div class="carousel-frame">
+		<div class="carousel-slide">
+		  <img src="{% static 'images/enregistrement/pictureof_ia.jpg'%}" />
+		  <img src="{% static 'images/enregistrement/artificial-intelligence-2.jpg'%}" />
+		  <img src="{% static 'images/enregistrement/ai-generated.jpg'%}" />
+		  <img src="{% static 'images/enregistrement/artificial-intelligence-3.jpg'%}" />
+		</div>
+		<i class="carousel-prev fas fa-chevron-left"></i>
+		<i class="carousel-next fas fa-chevron-right"></i>
+		<ol class="carousel-dots">
+		  <li></li>
+		  <li></li>
+		  <li></li>
+		  <li></li>
+		  <li></li>
+		  <li></li>
+		</ol>
+	  </div>
+	  <div class="milieu">
+		<div class="about">
+			<h1 class="about_h1">About <span style="color: black;">Int.</span>
+				<span>_</span>
+				<span style="color: green;">Art.</span>
+			</h1>
+			<h3 class="about_h3">Artificial Intelligence (AI) refers to the simulation of human intelligence in machines programmed to think, learn, and make decisions. It powers applications like voice assistants, autonomous vehicles, and advanced data analytics. AI uses technologies such as machine learning, natural language processing, and computer vision to perform tasks typically requiring human intelligence. Its potential spans industries, from improving healthcare diagnoses to optimizing business operations, while raising important ethical and societal considerations about its impact on jobs, privacy, and decision-making.</h3>
+		</div>
+		<div class="troiscartes">
+			<div class="trois">
+				<div class="un">
+					<img src="{% static 'images/enregistrement/pictureof_ia1.png' %}" alt="" width="90%" height="100%"><br/>
+					<div class="carte1mobile">
+						<p> <h3>Process optimization (Industry and Logistics)</h3> Process optimization (Industry and Logistics) AI automates complex tasks like supply chain management, predictive machine maintenance, and route optimization, reducing costs and increasing efficiency.</p>
+					</div>
+				</div>
+				<div class="deux">
+					<img src="{% static 'images/enregistrement/picture of health.png' %}" alt="" width="90%" height="100%">
+				</div>
+				<div class="three">
+					<img src="{% static 'images/enregistrement/ecom-solutions-1024x562.png' %}" alt="" width="90%" height="100%">
+				</div>
+			</div>
+			<div class="cartes">
+				<div class="catees">
+					<div class="carte1">
+						<p> <h3>Process optimization (Industry and Logistics)</h3> Process optimization (Industry and Logistics) AI automates complex tasks like supply chain management, predictive machine maintenance, and route optimization, reducing costs and increasing efficiency.</p>
+					</div>
+					<div class="carte2">
+						<p> <h3>Improved healthcare (Medicine):</h3> With tools like AI-assisted diagnosis and disease prediction, AI can personalize treatments, accelerate medical research, and improve patient care.</p>
+					</div>
+					<div class="carte3">
+						<p><h3>Improved customer experience (Commerce and Marketing):</h3> AI-powered chatbots and recommendation systems deliver personalized interactions and relevant suggestions, increasing customer satisfaction and loyalty.</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	  </div>
+	
+	<div class="video-container">
+		  <!-- Ajoutez la source de votre vidéo en modifiant les liens ci-dessous -->
+		  <video autoplay loop muted preload="auto" class="background-video">
+			 <!-- Ajoutez la source de votre vidéo en modifiant les liens ci-dessous -->
+			 <source id="mp4" src="{% static 'videos\enregistrement\1114892_Man_Woman_1920x1080 (1).mp4' %}" type="video/mp4">
+			 <source id="webm" src="{% static 'videos\enregistrement\1114892_Man_Woman_1920x1080 (1).mp4' %}" type="video/webm">
+			 <source id="ogv" src="{% static 'videos\enregistrement\1114892_Man_Woman_1920x1080 (1).mp4' %}" type="video/ogg">
+		  </video>
+		<div class="content">
+		  <!-- Votre contenu ici -->
+		  <h1>Sign up now for Int.Art</h1>
+		  <p>Join us in promoting to discover the Future</p>
+		  <button class="bouton"><a class="Free" href="{% url 'inscription' %}"><h1>Free registration</h1></a></button>
+		</div>
+	</div>
+	<div class="espace">
+
+	</div>
+	<footer class="section bg-footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-3">
+                    <div class="">
+                        <h5 class="footer-heading text-uppercase text-white">Information</h5>
+                        <ul class="list-unstyled footer-link mt-4">
+                            <li><a href="">About</a></li>
+                            <li><a href="">Benefits</a></li>
+                            <li><a href="">Limits</a></li>
+                            <li><a href="">The prospects</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="col-lg-3">
+                    <div class="">
+                        <h5 class="footer-heading text-uppercase text-white">Ressources</h5>
+                        <ul class="list-unstyled footer-link mt-4">
+                            <li><a href="">documentation </a></li>
+                            <li><a href="">Video Tutorial</a></li>
+                            <li><a href="">Google</a></li>
+                            <li><a href="">yutube</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="col-lg-2">
+                    <div class="">
+                        <h5 class="footer-heading text-uppercase text-white">Help</h5>
+                        <ul class="list-unstyled footer-link mt-4">
+                            <li><a href="">Sign Up </a></li>
+                            <li><a href="">Login</a></li>
+                            <li><a href="">Terms of Services</a></li>
+                            <li><a href="">Privacy Policy</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="col-lg-4">
+                    <div class="">
+                        <h5 class="footer-heading text-uppercase text-white">Contact Us</h5>
+                        <p class="contact-info mt-4"><h4 style="color: white;">diallomamoud298@gmail.com</h4></p>
+                        <p class="contact-info"><h4 style="color: white;">+225 0758504822</h4></p>
+                        <div class="mt-5">
+                            <ul class="list-inline">
+                                <li class="list-inline-item"><a href="#"><i class="fab facebook footer-social-icon fa-facebook-f"></i></i></a></li>
+                                <li class="list-inline-item"><a href="#"><i class="fab twitter footer-social-icon fa-twitter"></i></i></a></li>
+                                <li class="list-inline-item"><a href="#"><i class="fab google footer-social-icon fa-google"></i></i></a></li>
+                                <!-- <li class="list-inline-item"><a href="#"><i class="fab apple footer-social-icon fa-apple"></i></i></a></li> -->
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="text-center mt-5">
+            <p class="footer-alt mb-0 f-14">2023 © Mamoudou Diallo The data science is an intellectual adventure to discover treasures within the mountains of data., All Rights Reserved</p>
+        </div>
+    </footer>
+	
+	  <script
+			src="{% static 'js/enregistrement/main.js'%}"
+		
+	  ></script>
+</body>
+</html>

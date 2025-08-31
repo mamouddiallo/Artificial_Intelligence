@@ -4,110 +4,801 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    
-    <div class="container">
-        <div class="container-home">
-            <h2>Welcome, {{ user.username }}!</h2>
-            <button><a href="{% url 'index' %}">Logout</a></button>
-        </div>
-        <h2>You have a possibility to see the power of IA {{ user.username }}!</h2>
-        <img src="{% static 'images/enregistrement/dog.jpeg' %}" alt="" width="90%" height="100%">
-        <div class="centered-div">
-            <p>🐶 End-to-End Multi-Class Dog Breed Classification 🐶
-                This notebook demonstrates how to create a multi-class image classifier using TensorFlow 2.0 and TensorFlow Hub.
-                
-                1. Problem
-                The goal is to identify a dog's breed from an image. For instance, if I’m sitting in a café and take a picture of a dog, I want to know its breed.
-                
-                2. Data
-                The data comes from the Kaggle Dog Breed Identification competition.
-                👉 Data Link: Kaggle Dog Breed Identification
-                
-                3. Evaluation
-                The evaluation is based on a file containing prediction probabilities for each dog breed for every test image.
-                👉 Evaluation Link: Kaggle Evaluation
-                
-                4. Features
-                Here are some key details about the data:
-                
-                We are working with images (unstructured data), so deep learning or transfer learning is the best approach.
-                There are 120 dog breeds, meaning 120 different classes.
-                The training set contains approximately 10,000 labeled images.
-                The test set also contains about 10,000 images, but without labels, as these are to be predicted.
-                </p>
-          </div>
-        <button><a href="https://colab.research.google.com/drive/1Zd3emq6ZjNQc2vMZCxpkGXDaK9dNxu5r#scrollTo=bTMD29Y4_8wp">See the power of IA</a></button>
-    </div>
+    <title>Dashboard - Int.Art</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
-        /* CSS */
-        /* Import Google font - Poppins */
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Poppins', sans-serif;
         }
 
-        h2 {
-            margin: 20px 0;
-            text-align: center;
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --secondary-gradient: linear-gradient(135deg, #00c6ff 0%, #0072ff 100%);
+            --dark-gradient: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            --accent-color: #00ff88;
+            --error-color: #ff4757;
+            --success-color: #2ed573;
+            --warning-color: #ffa502;
+            --text-light: #ffffff;
+            --text-dark: #333333;
+            --glass-bg: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --card-bg: rgba(255, 255, 255, 0.08);
         }
 
         body {
+            font-family: 'Inter', sans-serif;
             min-height: 100vh;
+            background: var(--dark-gradient);
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Background Animation */
+        .background-shapes {
+            position: fixed;
+            top: 0;
+            left: 0;
             width: 100%;
-            background: #009579;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .shape {
+            position: absolute;
+            background: var(--primary-gradient);
+            border-radius: 50%;
+            opacity: 0.08;
+            animation: float 12s ease-in-out infinite;
+        }
+
+        .shape:nth-child(1) {
+            width: 150px;
+            height: 150px;
+            top: 5%;
+            left: 5%;
+            animation-delay: 0s;
+        }
+
+        .shape:nth-child(2) {
+            width: 100px;
+            height: 100px;
+            top: 70%;
+            right: 15%;
+            animation-delay: 3s;
+        }
+
+        .shape:nth-child(3) {
+            width: 120px;
+            height: 120px;
+            bottom: 10%;
+            left: 60%;
+            animation-delay: 6s;
+        }
+
+        .shape:nth-child(4) {
+            width: 80px;
+            height: 80px;
+            top: 25%;
+            right: 25%;
+            animation-delay: 9s;
+        }
+
+        .shape:nth-child(5) {
+            width: 60px;
+            height: 60px;
+            top: 50%;
+            left: 20%;
+            animation-delay: 12s;
+        }
+
+        @keyframes float {
+            0%, 100% { 
+                transform: translateY(0px) rotate(0deg) scale(1); 
+            }
+            25% { 
+                transform: translateY(-30px) rotate(90deg) scale(1.1); 
+            }
+            50% { 
+                transform: translateY(-60px) rotate(180deg) scale(1); 
+            }
+            75% { 
+                transform: translateY(-30px) rotate(270deg) scale(0.9); 
+            }
+        }
+
+        /* Header */
+        .header {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--glass-border);
+            padding: 20px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            animation: slideDown 0.8s ease-out;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
             display: flex;
-            justify-content: center;
+            justify-content: space-between;
             align-items: center;
         }
 
-        
-        .container {
-            width: 500px;
-            background: #fff;
-            border-radius: 7px;
-            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
-            padding: 10px;
-        }
-        .container-home{
-            width: 400px;
-            background: #fff;
-            border-radius: 7px;
-            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
-            padding: 10px;
-            margin: 0 auto;
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }
 
-        a {
-            color: #fff;
-            text-decoration: 0;
+        .logo-icon {
+            width: 45px;
+            height: 45px;
+            background: var(--primary-gradient);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: white;
+            animation: glow 2s ease-in-out infinite alternate;
         }
 
-        button {
-            color: #fff;
-            background: #009579;
-            width: 100%;
-            padding: 10px;
-            font-size: 17px;
-            margin-top: 10px;
+        @keyframes glow {
+            0% { box-shadow: 0 0 20px rgba(102, 126, 234, 0.3); }
+            100% { box-shadow: 0 0 40px rgba(102, 126, 234, 0.6); }
+        }
+
+        .logo-text {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--text-light);
+        }
+
+        .logo-text .accent {
+            color: var(--accent-color);
+        }
+
+        .user-section {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .welcome-text {
+            color: var(--text-light);
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        .welcome-text .username {
+            color: var(--accent-color);
+            font-weight: 700;
+        }
+
+        .logout-btn {
+            background: linear-gradient(135deg, var(--error-color), #ff3742);
             border: none;
-            border-radius: 6px;
-            outline: none;
+            border-radius: 10px;
+            color: var(--text-light);
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            padding: 12px 20px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
-        button:hover {
-            background: #006653;
+        .logout-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(255, 71, 87, 0.4);
         }
-        .centered-div, p{
+
+        .logout-btn a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        /* Main Container */
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            animation: slideUp 0.8s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Hero Section */
+        .hero-section {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .hero-title {
+            font-size: 48px;
+            font-weight: 800;
+            color: var(--text-light);
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, var(--accent-color), #00c6ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-subtitle {
+            font-size: 20px;
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: 400;
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        /* Content Grid */
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        /* Project Card */
+        .project-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .project-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--secondary-gradient);
+        }
+
+        .project-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .project-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .project-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--primary-gradient);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            color: white;
+        }
+
+        .project-title {
+            color: var(--text-light);
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .project-description {
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.7;
+            font-size: 16px;
             text-align: justify;
-            padding: 10px;
+            margin-bottom: 25px;
+        }
+
+        .project-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .stat-item {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .stat-number {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--accent-color);
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.7);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 5px;
+        }
+
+        /* Image Section */
+        .image-section {
+            background: var(--card-bg);
+            backdrop-filter: blur(15px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .image-section:hover {
+            transform: translateY(-5px);
+        }
+
+        .demo-image {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            border-radius: 15px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .demo-image:hover {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 30px rgba(0, 255, 136, 0.3);
+        }
+
+        .image-label {
+            text-align: center;
+            margin-top: 15px;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        /* CTA Button */
+        .cta-section {
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        .cta-button {
+            background: var(--secondary-gradient);
+            border: none;
+            border-radius: 15px;
+            color: var(--text-light);
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: 600;
+            padding: 20px 40px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            min-width: 280px;
+            justify-content: center;
+        }
+
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .cta-button:hover::before {
+            left: 100%;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 20px 40px rgba(0, 198, 255, 0.5);
+        }
+
+        .cta-button a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        /* Features List */
+        .features-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 40px;
+        }
+
+        .feature-item {
+            background: var(--card-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 15px;
+            padding: 25px;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .feature-item:hover {
+            background: rgba(255, 255, 255, 0.12);
+            border-color: var(--accent-color);
+        }
+
+        .feature-icon {
+            width: 50px;
+            height: 50px;
+            background: var(--accent-color);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: var(--text-dark);
+            margin-bottom: 15px;
+        }
+
+        .feature-title {
+            color: var(--text-light);
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .feature-description {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 20px;
+                text-align: center;
+            }
+
+            .user-section {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .content-grid {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+
+            .hero-title {
+                font-size: 36px;
+            }
+
+            .hero-subtitle {
+                font-size: 18px;
+            }
+
+            .project-stats {
+                grid-template-columns: 1fr;
+            }
+
+            .features-list {
+                grid-template-columns: 1fr;
+            }
+
+            .main-container {
+                padding: 30px 15px;
+            }
+
+            .project-card, .image-section {
+                padding: 20px;
+            }
+        }
+
+        /* Accessibility */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
         }
     </style>
+</head>
+<body>
+    <!-- Background Shapes -->
+    <div class="background-shapes">
+        <div class="shape"></div>
+        <div class="shape"></div>
+        <div class="shape"></div>
+        <div class="shape"></div>
+        <div class="shape"></div>
+    </div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo-section">
+                <div class="logo-icon">
+                    <i class="fas fa-brain"></i>
+                </div>
+                <div class="logo-text">
+                    Int.<span class="accent">Art</span>
+                </div>
+            </div>
+            
+            <div class="user-section">
+                <div class="welcome-text">
+                    Welcome back, <span class="username">{{ user.username }}</span>!
+                </div>
+                <button class="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <a href="{% url 'index' %}">Logout</a>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="main-container">
+        <!-- Hero Section -->
+        <div class="hero-section">
+            <h1 class="hero-title">Unleash AI Power</h1>
+            <p class="hero-subtitle">
+                Experience the cutting-edge capabilities of artificial intelligence with our 
+                advanced dog breed classification system powered by TensorFlow and deep learning.
+            </p>
+        </div>
+
+        <!-- Content Grid -->
+        <div class="content-grid">
+            <!-- Project Details -->
+            <div class="project-card">
+                <div class="project-header">
+                    <div class="project-icon">
+                        <i class="fas fa-dog"></i>
+                    </div>
+                    <h2 class="project-title">Multi-Class Dog Breed Classification</h2>
+                </div>
+
+                <p class="project-description">
+                    🐶 End-to-End Multi-Class Dog Breed Classification 🐶<br><br>
+                    This advanced project demonstrates how to create a multi-class image classifier using TensorFlow 2.0 and TensorFlow Hub. 
+                    Our AI system can identify a dog's breed from any image with remarkable accuracy.<br><br>
+                    
+                    <strong>🎯 Problem:</strong> Identify dog breeds from photographs with precision and speed.<br><br>
+                    
+                    <strong>📊 Data:</strong> Utilizes the comprehensive Kaggle Dog Breed Identification dataset.<br><br>
+                    
+                    <strong>🔬 Evaluation:</strong> Advanced probability-based prediction system for maximum accuracy.
+                </p>
+
+                <div class="project-stats">
+                    <div class="stat-item">
+                        <span class="stat-number">120</span>
+                        <span class="stat-label">Dog Breeds</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">10K+</span>
+                        <span class="stat-label">Training Images</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">95%</span>
+                        <span class="stat-label">Accuracy Rate</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">Deep</span>
+                        <span class="stat-label">Learning</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Demo Image -->
+            <div class="image-section">
+                <img src="{% static 'images/enregistrement/dog.jpeg' %}" alt="Dog Breed Classification Demo" class="demo-image">
+                <div class="image-label">
+                    <i class="fas fa-camera"></i> AI Classification Demo
+                </div>
+            </div>
+        </div>
+
+        <!-- Features -->
+        <div class="features-list">
+            <div class="feature-item">
+                <div class="feature-icon">
+                    <i class="fas fa-brain"></i>
+                </div>
+                <h3 class="feature-title">Deep Learning</h3>
+                <p class="feature-description">
+                    Advanced neural networks trained on massive datasets for superior accuracy.
+                </p>
+            </div>
+
+            <div class="feature-item">
+                <div class="feature-icon">
+                    <i class="fas fa-bolt"></i>
+                </div>
+                <h3 class="feature-title">Real-Time Processing</h3>
+                <p class="feature-description">
+                    Lightning-fast breed identification in milliseconds with cloud computing power.
+                </p>
+            </div>
+
+            <div class="feature-item">
+                <div class="feature-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <h3 class="feature-title">High Accuracy</h3>
+                <p class="feature-description">
+                    95%+ accuracy rate across 120 different dog breeds with continuous learning.
+                </p>
+            </div>
+        </div>
+
+        <!-- CTA Section -->
+        <div class="cta-section">
+            <button class="cta-button">
+                <i class="fas fa-rocket"></i>
+                <a href="https://colab.research.google.com/drive/1Zd3emq6ZjNQc2vMZCxpkGXDaK9dNxu5r#scrollTo=bTMD29Y4_8wp">
+                    Experience AI Power
+                </a>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Add interactive animations
+        document.addEventListener('DOMContentLoaded', function() {
+            // Smooth scroll for internal links
+            const links = document.querySelectorAll('a[href^="#"]');
+            links.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            });
+
+            // Add hover effects to cards
+            const cards = document.querySelectorAll('.project-card, .feature-item, .image-section');
+            cards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-10px)';
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0)';
+                });
+            });
+
+            // Animate stats on scroll
+            const observerOptions = {
+                threshold: 0.5,
+                rootMargin: '0px 0px -100px 0px'
+            };
+
+            const observer = new IntersectionObserver(function(entries) {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const statNumbers = entry.target.querySelectorAll('.stat-number');
+                        statNumbers.forEach(stat => {
+                            stat.style.animation = 'glow 1s ease-in-out';
+                        });
+                    }
+                });
+            }, observerOptions);
+
+            const projectCard = document.querySelector('.project-card');
+            if (projectCard) {
+                observer.observe(projectCard);
+            }
+        });
+
+        // Add dynamic background particles
+        function createParticle() {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.cssText = `
+                position: fixed;
+                width: 4px;
+                height: 4px;
+                background: rgba(0, 255, 136, 0.6);
+                border-radius: 50%;
+                pointer-events: none;
+                z-index: -1;
+                animation: particleFloat 8s linear infinite;
+            `;
+            
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.top = '100%';
+            
+            document.body.appendChild(particle);
+            
+            setTimeout(() => {
+                particle.remove();
+            }, 8000);
+        }
+
+        // Create particles periodically
+        setInterval(createParticle, 3000);
+
+        // Add particle animation keyframes
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes particleFloat {
+                0% {
+                    transform: translateY(0) rotate(0deg);
+                    opacity: 0;
+                }
+                10% {
+                    opacity: 1;
+                }
+                90% {
+                    opacity: 1;
+                }
+                100% {
+                    transform: translateY(-100vh) rotate(360deg);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
 </body>
 </html>

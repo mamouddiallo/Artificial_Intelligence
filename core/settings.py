@@ -27,11 +27,9 @@ SECRET_KEY = os.environ.get("SECRET_KEY", "secret_key")
 
 DEBUG = os.environ.get("DEBUG", True)
 
-<<<<<<< HEAD
 ALLOWED_HOSTS = ['.onrender.com', 'http://127.0.0.1:8000/', '127.0.0.1']
-=======
-ALLOWED_HOSTS = ['.onrender.com', 'http://127.0.0.1:8000/']
->>>>>>> 7420f03269e89f090af0bd6821c08a10e3f0a95f
+
+
 
 
 # Application definition

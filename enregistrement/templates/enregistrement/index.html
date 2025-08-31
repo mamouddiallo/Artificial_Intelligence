@@ -1,370 +1,1063 @@
-{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" nucontenu="IE=edge">
-    <meta name="viewport" width=device-width, initial-scale=1.0>
-    <title>Artificial Intelligence</title>
-	<link rel="stylesheet" href="{% static 'css/enregistrement/style.css'%}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Int.Art - Artificial Intelligence Platform</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --secondary-gradient: linear-gradient(135deg, #00c6ff 0%, #0072ff 100%);
+            --dark-gradient: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            --accent-color: #00ff88;
+            --text-light: #ffffff;
+            --text-dark: #333333;
+            --glass-bg: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.2);
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.6;
+            color: var(--text-light);
+            overflow-x: hidden;
+            background: var(--dark-gradient);
+        }
+
+        /* Loading Animation */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: var(--dark-gradient);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.8s ease, visibility 0.8s ease;
+        }
+
+        .loading-screen.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .ai-loader {
+            width: 80px;
+            height: 80px;
+            border: 3px solid transparent;
+            border-top: 3px solid var(--accent-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            position: relative;
+        }
+
+        .ai-loader::before {
+            content: '';
+            position: absolute;
+            top: -3px;
+            left: -3px;
+            right: -3px;
+            bottom: -3px;
+            border: 3px solid transparent;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1.5s linear infinite reverse;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Navigation */
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 1rem 2rem;
+            background: rgba(26, 26, 46, 0.9);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--glass-border);
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .navbar.scrolled {
+            padding: 0.5rem 2rem;
+            background: rgba(26, 26, 46, 0.95);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-light);
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--primary-gradient);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            0% { box-shadow: 0 0 20px rgba(102, 126, 234, 0.3); }
+            100% { box-shadow: 0 0 40px rgba(102, 126, 234, 0.6); }
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: var(--text-light);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent-color);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .mobile-menu {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+        }
+
+        .mobile-menu span {
+            width: 25px;
+            height: 3px;
+            background: var(--text-light);
+            margin: 3px 0;
+            transition: 0.3s;
+        }
+
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--dark-gradient);
+        }
+
+        .floating-shapes {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .shape {
+            position: absolute;
+            background: var(--primary-gradient);
+            border-radius: 50%;
+            opacity: 0.1;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .shape:nth-child(1) {
+            width: 100px;
+            height: 100px;
+            top: 20%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+
+        .shape:nth-child(2) {
+            width: 150px;
+            height: 150px;
+            top: 60%;
+            right: 15%;
+            animation-delay: 2s;
+        }
+
+        .shape:nth-child(3) {
+            width: 80px;
+            height: 80px;
+            bottom: 20%;
+            left: 20%;
+            animation-delay: 4s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
+
+        .hero-content {
+            text-align: center;
+            z-index: 2;
+            max-width: 800px;
+            padding: 0 2rem;
+        }
+
+        .hero-title {
+            font-size: clamp(2.5rem, 8vw, 4.5rem);
+            font-weight: 800;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--accent-color), #667eea);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: slideUp 1s ease-out 0.5s both;
+        }
+
+        .hero-subtitle {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+            animation: slideUp 1s ease-out 0.7s both;
+        }
+
+        .cta-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1rem 2rem;
+            background: var(--secondary-gradient);
+            color: var(--text-light);
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            animation: slideUp 1s ease-out 0.9s both;
+            border: 2px solid transparent;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 20px 40px rgba(0, 198, 255, 0.3);
+            border-color: var(--accent-color);
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Image Carousel */
+        .carousel-section {
+            padding: 5rem 0;
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .carousel-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            overflow: hidden;
+            border-radius: 20px;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .carousel-wrapper {
+            display: flex;
+            transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .carousel-slide {
+            min-width: 100%;
+            height: 400px;
+            position: relative;
+        }
+
+        .carousel-slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .carousel-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, rgba(0, 0, 0, 0.5), rgba(102, 126, 234, 0.3));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .carousel-text {
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .carousel-text h3 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .carousel-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: var(--text-light);
+        }
+
+        .carousel-nav:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .carousel-prev {
+            left: 20px;
+        }
+
+        .carousel-next {
+            right: 20px;
+        }
+
+        .carousel-dots {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .carousel-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .carousel-dot.active {
+            background: var(--accent-color);
+            transform: scale(1.2);
+        }
+
+        /* About Section */
+        .about-section {
+            padding: 8rem 0;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .about-content {
+            text-align: center;
+            padding: 0 2rem;
+        }
+
+        .about-title {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 700;
+            margin-bottom: 2rem;
+            background: linear-gradient(135deg, var(--text-light), var(--accent-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .about-description {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            max-width: 800px;
+            margin: 0 auto 4rem;
+            opacity: 0.9;
+        }
+
+        /* Features Grid */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-top: 4rem;
+            padding: 0 2rem;
+        }
+
+        .feature-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .feature-card:hover::before {
+            left: 100%;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 30px 60px rgba(102, 126, 234, 0.2);
+            border-color: var(--accent-color);
+        }
+
+        .feature-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 1.5rem;
+            background: var(--primary-gradient);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+        }
+
+        .feature-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text-light);
+        }
+
+        .feature-description {
+            opacity: 0.8;
+            line-height: 1.6;
+        }
+
+        /* Video CTA Section */
+        .video-cta {
+            position: relative;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .video-background {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            min-width: 100%;
+            min-height: 100%;
+            width: auto;
+            height: auto;
+            transform: translate(-50%, -50%);
+            z-index: -2;
+        }
+
+        .video-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.7), rgba(102, 126, 234, 0.3));
+            z-index: -1;
+        }
+
+        .video-content {
+            text-align: center;
+            padding: 0 2rem;
+            z-index: 2;
+        }
+
+        .video-title {
+            font-size: clamp(2rem, 6vw, 4rem);
+            font-weight: 800;
+            margin-bottom: 1rem;
+        }
+
+        .video-subtitle {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .video-cta-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1.2rem 2.5rem;
+            background: var(--accent-color);
+            color: var(--text-dark);
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            transition: all 0.4s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .video-cta-button:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 25px 50px rgba(0, 255, 136, 0.4);
+            background: linear-gradient(135deg, var(--accent-color), #00c6ff);
+        }
+
+        /* Footer */
+        .footer {
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(20px);
+            padding: 4rem 0 2rem;
+            border-top: 1px solid var(--glass-border);
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+        }
+
+        .footer-section h3 {
+            font-size: 1.3rem;
+            margin-bottom: 1.5rem;
+            color: var(--accent-color);
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 0.8rem;
+        }
+
+        .footer-section a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-section a:hover {
+            color: var(--accent-color);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .social-links a {
+            width: 40px;
+            height: 40px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .social-links a:hover {
+            background: var(--accent-color);
+            color: var(--text-dark);
+            transform: translateY(-3px);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--glass-border);
+            opacity: 0.7;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .mobile-menu {
+                display: flex;
+            }
+
+            .hero-content {
+                padding: 0 1rem;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+                padding: 0 1rem;
+            }
+
+            .carousel-nav {
+                width: 40px;
+                height: 40px;
+            }
+
+            .carousel-prev {
+                left: 10px;
+            }
+
+            .carousel-next {
+                right: 10px;
+            }
+
+            .video-content {
+                padding: 0 1rem;
+            }
+
+            .footer-content {
+                padding: 0 1rem;
+                gap: 2rem;
+            }
+        }
+
+        /* Animations */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Scroll indicator */
+        .scroll-indicator {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            z-index: 9999;
+        }
+
+        .scroll-progress {
+            height: 100%;
+            background: var(--secondary-gradient);
+            width: 0%;
+            transition: width 0.1s ease;
+        }
+    </style>
 </head>
 <body>
+    <!-- Loading Screen -->
+    <div class="loading-screen">
+        <div class="ai-loader"></div>
+    </div>
+
+    <!-- Scroll Indicator -->
+    <div class="scroll-indicator">
+        <div class="scroll-progress"></div>
+    </div>
+
+    <!-- Navigation -->
     <nav class="navbar">
-        <div class="navbar-container container">
-            <input type="checkbox" name="" id="">
-            <div class="hamburger-lines">
-                <span class="line line1"></span>
-                <span class="line line2"></span>
-                <span class="line line3"></span>
-            </div>
-            <ul class="menu-items">
-                <li><a href="#">About</a></li>
-                <li><a href="#">Benefits</a></li>
-                <li><a href="#">Limits</a></li>
-                <li><a href="#">The prospects</a></li>
+        <div class="nav-container">
+            <a href="#" class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-brain"></i>
+                </div>
+                <span>Int.<span style="color: var(--accent-color);">Art</span></span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="#about">About</a></li>
+                <li><a href="#benefits">Benefits</a></li>
+                <li><a href="#features">Features</a></li>
+                <li><a href="#contact">Contact</a></li>
             </ul>
-            <h1 class="logo"><img src="{% static 'images/enregistrement/IA.png'%}" width="50px" height="30px"></h1>
-			<h1 class="logo"><span style="color:white;">Int.</span>
-				<span>_</span>
-				<span style="color: green;">Art.</span>
-			</h1>
+            <div class="mobile-menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
         </div>
     </nav>
-	<div class="carousel-frame">
-		<div class="carousel-slide">
-		  <img src="{% static 'images/enregistrement/pictureof_ia.jpg'%}" />
-		  <img src="{% static 'images/enregistrement/artificial-intelligence-2.jpg'%}" />
-		  <img src="{% static 'images/enregistrement/ai-generated.jpg'%}" />
-		  <img src="{% static 'images/enregistrement/artificial-intelligence-3.jpg'%}" />
-		</div>
-		<i class="carousel-prev fas fa-chevron-left"></i>
-		<i class="carousel-next fas fa-chevron-right"></i>
-		<ol class="carousel-dots">
-		  <li></li>
-		  <li></li>
-		  <li></li>
-		  <li></li>
-		  <li></li>
-		  <li></li>
-		</ol>
-	  </div>
-	  <div class="milieu">
-		<div class="about">
-			<h1 class="about_h1">About <span style="color: black;">Int.</span>
-				<span>_</span>
-				<span style="color: green;">Art.</span>
-			</h1>
-			<h3 class="about_h3">Artificial Intelligence (AI) refers to the simulation of human intelligence in machines programmed to think, learn, and make decisions. It powers applications like voice assistants, autonomous vehicles, and advanced data analytics. AI uses technologies such as machine learning, natural language processing, and computer vision to perform tasks typically requiring human intelligence. Its potential spans industries, from improving healthcare diagnoses to optimizing business operations, while raising important ethical and societal considerations about its impact on jobs, privacy, and decision-making.</h3>
-		</div>
-		<div class="troiscartes">
-			<div class="trois">
-				<div class="un">
-					<img src="{% static 'images/enregistrement/pictureof_ia1.png' %}" alt="" width="90%" height="100%"><br/>
-					<div class="carte1mobile">
-						<p> <h3>Process optimization (Industry and Logistics)</h3> Process optimization (Industry and Logistics) AI automates complex tasks like supply chain management, predictive machine maintenance, and route optimization, reducing costs and increasing efficiency.</p>
-					</div>
-				</div>
-				<div class="deux">
-					<img src="{% static 'images/enregistrement/picture of health.png' %}" alt="" width="90%" height="100%">
-				</div>
-				<div class="three">
-					<img src="{% static 'images/enregistrement/ecom-solutions-1024x562.png' %}" alt="" width="90%" height="100%">
-				</div>
-			</div>
-			<div class="cartes">
-				<div class="catees">
-					<div class="carte1">
-						<p> <h3>Process optimization (Industry and Logistics)</h3> Process optimization (Industry and Logistics) AI automates complex tasks like supply chain management, predictive machine maintenance, and route optimization, reducing costs and increasing efficiency.</p>
-					</div>
-					<div class="carte2">
-						<p> <h3>Improved healthcare (Medicine):</h3> With tools like AI-assisted diagnosis and disease prediction, AI can personalize treatments, accelerate medical research, and improve patient care.</p>
-					</div>
-					<div class="carte3">
-						<p><h3>Improved customer experience (Commerce and Marketing):</h3> AI-powered chatbots and recommendation systems deliver personalized interactions and relevant suggestions, increasing customer satisfaction and loyalty.</p>
-					</div>
-				</div>
-			</div>
-		</div>
-	  </div>
-	 <!-- ici c'est la gallery -->
-	<!-- <div class="contenu">
 
-		<div class="main">
-			<h1 style="color: black;">Art</h1>
-			<ul class="cards">
-			  <li class="cards_item">
-				<div class="card">
-				  <div class="card_image"><img src="https://picsum.photos/500/300/?image=10"></div>
-				  <div class="card_content">
-					<h2 class="card_title">Palestinian art</h2>
-					<p class="card_text">Palestinian art is a rich experience</p>
-					<button class="btn card_btn">Read More</button>
-				  </div>
-				</div>
-			  </li>
-			  <li class="cards_item">
-				<div class="card">
-				  <div class="card_image"><img src="https://picsum.photos/500/300/?image=5"></div>
-				  <div class="card_content">
-					<h2 class="card_title">Palestinian art</h2>
-					<p class="card_text">Palestinian art is a rich experience</p>
-					<button class="btn card_btn">Read More</button>
-				  </div>
-				</div>
-			  </li>
-			  <li class="cards_item">
-				<div class="card">
-				  <div class="card_image"><img src="https://picsum.photos/500/300/?image=11"></div>
-				  <div class="card_content">
-					<h2 class="card_title">Art palestine</h2>
-					<p class="card_text">Palestinian art is a rich experience</p>
-					<button class="btn card_btn">Read More</button>
-				  </div>
-				</div>
-			  </li>
-			</ul>
-			<div class="dance">
-				<h1>Dance</h1>
-				<ul class="cards">
-					<li class="cards_item">
-					  <div class="card">
-						<div class="card_image"><img src="https://picsum.photos/500/300/?image=10"></div>
-						<div class="card_content">
-						  <h2 class="card_title">Dance</h2>
-						  <p class="card_text">Dance of Palestinian</p>
-						  <button class="btn card_btn">Read More</button>
-						</div>
-					  </div>
-					</li>
-					<li class="cards_item">
-					  <div class="card">
-						<div class="card_image"><img src="https://picsum.photos/500/300/?image=5"></div>
-						<div class="card_content">
-						  <h2 class="card_title">Dance</h2>
-						  <p class="card_text">Demo  of Palestinian Dance</p>
-						  <button class="btn card_btn">Read More</button>
-						</div>
-					  </div>
-					</li>
-					<li class="cards_item">
-					  <div class="card">
-						<div class="card_image"><img src="https://picsum.photos/500/300/?image=11"></div>
-						<div class="card_content">
-						  <h2 class="card_title">Dance</h2>
-						  <p class="card_text">Demo  of Palestinian Dance</p>
-						  <button class="btn card_btn">Read More</button>
-						</div>
-					  </div>
-					</li>
-			</div>
-			<div class="dance">
-				<h1>Literature</h1>
-				<ul class="cards">
-					<li class="cards_item">
-					  <div class="card">
-						<div class="card_image"><img src="https://picsum.photos/500/300/?image=10"></div>
-						<div class="card_content">
-						  <h2 class="card_title">Literature</h2>
-						  <p class="card_text">Demo  of Palestinian Literature</p>
-						  <button class="btn card_btn">Read More</button>
-						</div>
-					  </div>
-					</li>
-					<li class="cards_item">
-					  <div class="card">
-						<div class="card_image"><img src="https://picsum.photos/500/300/?image=5"></div>
-						<div class="card_content">
-						  <h2 class="card_title">Literature</h2>
-						  <p class="card_text">Demo  of Palestinian Literature</p>
-						  <button class="btn card_btn">Read More</button>
-						</div>
-					  </div>
-					</li>
-					<li class="cards_item">
-					  <div class="card">
-						<div class="card_image"><img src="https://picsum.photos/500/300/?image=11"></div>
-						<div class="card_content">
-						  <h2 class="card_title">Literature</h2>
-						  <p class="card_text">Demo  of Palestinian Literature</p>
-						  <button class="btn card_btn">Read More</button>
-						</div>
-					  </div>
-					</li>
-			</div>
-			<div class="dance">
-				<h1>Gastronomy</h1>
-				<ul class="cards">
-					<li class="cards_item">
-					  <div class="card">
-						<div class="card_image"><img src="https://picsum.photos/500/300/?image=10"></div>
-						<div class="card_content">
-						  <h2 class="card_title">Gastronomy</h2>
-						  <p class="card_text">Demo  of Palestinian Gastronomy</p>
-						  <button class="btn card_btn">Read More</button>
-						</div>
-					  </div>
-					</li>
-					<li class="cards_item">
-					  <div class="card">
-						<div class="card_image"><img src="https://picsum.photos/500/300/?image=5"></div>
-						<div class="card_content">
-						  <h2 class="card_title">Gastronomy</h2>
-						  <p class="card_text">Gastronomy Palestinian is a rich experience</p>
-						  <button class="btn card_btn">Read More</button>
-						</div>
-					  </div>
-					</li>
-					<li class="cards_item">
-					  <div class="card">
-						<div class="card_image"><img src="https://picsum.photos/500/300/?image=11"></div>
-						<div class="card_content">
-						  <h2 class="card_title">Gastronomy</h2>
-						  <p class="card_text">Gastronomy Palestinian is a rich experience</p>
-						  <button class="btn card_btn">Read More</button>
-						</div>
-					  </div>
-					</li>
-			</div>
-		</div>
-		<div class="picture_stat">
-			<div class="picture">
-					<img src="{% static 'images/enregistrement/women.jpg' %}" alt="" width="100%" height="100%">
-			</div>
-			<div class="stat">
-				<H1>OUR STATISTICS</H1><br>
-				
-			</div>
-		</div>
-		<div class="upcoming" >
-			<p class="upcoming_text">WHAT’S GOING ON</p>
-			<h1 class="upcoming_text">Upcoming Exhibitions</h1>
-		</div>
-		<div class="dance2">
-			<ul class="cards">
-				<li class="cards_item">
-				  <div class="card">
-					<div class="card_image"><img src="{% static 'images/enregistrement/comming1.jpg' %}"></div>
-					<div class="card_content">
-					  <h2 class="card_title">learn with us</h2>
-					  <p class="card_text">Learn with us about the culture of palestine</p>
-					  <button class="btn card_btn">Read More</button>
-					</div>
-				  </div>
-				</li>
-				<li class="cards_item">
-				  <div class="card">
-					<div class="card_image"><img src="{% static 'images/enregistrement/comming2.jpg' %}"></div>
-					<div class="card_content">
-					  <h2 class="card_title">The revolution of culture</h2>
-					  <p class="card_text">The revolution of the culture of palestine is here</p>
-					  <button class="btn card_btn">Read More</button>
-					</div>
-				  </div>
-				</li>
-				<li class="cards_item">
-				  <div class="card">
-					<div class="card_image"><img src="{% static 'images/enregistrement/comming1.jpg' %}"></div>
-					<div class="card_content">
-					  <h2 class="card_title">Best-sellers</h2>
-					  <p class="card_text">Best-sellers of the culture Palestinian is here</p>
-					  <button class="btn card_btn">Read More</button>
-					</div>
-				  </div>
-				</li>
-		</div>
-	</div> -->
-	<div class="video-container">
-		  <!-- Ajoutez la source de votre vidéo en modifiant les liens ci-dessous -->
-		  <video autoplay loop muted preload="auto" class="background-video">
-			 <!-- Ajoutez la source de votre vidéo en modifiant les liens ci-dessous -->
-			 <source id="mp4" src="{% static 'videos\enregistrement\1114892_Man_Woman_1920x1080 (1).mp4' %}" type="video/mp4">
-			 <source id="webm" src="{% static 'videos\enregistrement\1114892_Man_Woman_1920x1080 (1).mp4' %}" type="video/webm">
-			 <source id="ogv" src="{% static 'videos\enregistrement\1114892_Man_Woman_1920x1080 (1).mp4' %}" type="video/ogg">
-		  </video>
-		<div class="content">
-		  <!-- Votre contenu ici -->
-		  <h1>Sign up now for Int.Art</h1>
-		  <p>Join us in promoting to discover the Future</p>
-		  <button class="bouton"><a class="Free" href="{% url 'inscription' %}"><h1>Free registration</h1></a></button>
-		</div>
-	</div>
-	<div class="espace">
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-background">
+            <div class="floating-shapes">
+                <div class="shape"></div>
+                <div class="shape"></div>
+                <div class="shape"></div>
+            </div>
+        </div>
+        <div class="hero-content">
+            <h1 class="hero-title">The Future of AI is Here</h1>
+            <p class="hero-subtitle">Discover the power of artificial intelligence and transform your world with cutting-edge technology that thinks, learns, and evolves.</p>
+            <a href="{% url 'inscription' %}" class="cta-button">
+                <i class="fas fa-rocket"></i>
+                Start Your Journey
+            </a>
+        </div>
+    </section>
 
-	</div>
-	<footer class="section bg-footer">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-3">
-                    <div class="">
-                        <h5 class="footer-heading text-uppercase text-white">Information</h5>
-                        <ul class="list-unstyled footer-link mt-4">
-<<<<<<< HEAD
-                            <li><a href="">About</a></li>
-                            <li><a href="">Benefits</a></li>
-                            <li><a href="">Limits</a></li>
-                            <li><a href="">The prospects</li>
-=======
-                                 <li><a href="#">About</a></li>
-		        	<li><a href="#">Benefits</a></li>
-		                <li><a href="#">Limits</a></li>
-		                <li><a href="#">The prospects</a></li>
->>>>>>> 7420f03269e89f090af0bd6821c08a10e3f0a95f
-                        </ul>
-                    </div>
-                </div>
-
-                <div class="col-lg-3">
-                    <div class="">
-                        <h5 class="footer-heading text-uppercase text-white">Ressources</h5>
-                        <ul class="list-unstyled footer-link mt-4">
-                            <li><a href="">documentation </a></li>
-                            <li><a href="">Video Tutorial</a></li>
-                            <li><a href="">Google</a></li>
-                            <li><a href="">yutube</a></li>
-                        </ul>
-                    </div>
-                </div>
-
-                <div class="col-lg-2">
-                    <div class="">
-                        <h5 class="footer-heading text-uppercase text-white">Help</h5>
-                        <ul class="list-unstyled footer-link mt-4">
-                            <li><a href="">Sign Up </a></li>
-                            <li><a href="">Login</a></li>
-                            <li><a href="">Terms of Services</a></li>
-                            <li><a href="">Privacy Policy</a></li>
-                        </ul>
-                    </div>
-                </div>
-
-                <div class="col-lg-4">
-                    <div class="">
-                        <h5 class="footer-heading text-uppercase text-white">Contact Us</h5>
-                        <p class="contact-info mt-4"><h4 style="color: white;">diallomamoud298@gmail.com</h4></p>
-                        <p class="contact-info"><h4 style="color: white;">+225 0758504822</h4></p>
-                        <div class="mt-5">
-                            <ul class="list-inline">
-                                <li class="list-inline-item"><a href="#"><i class="fab facebook footer-social-icon fa-facebook-f"></i></i></a></li>
-                                <li class="list-inline-item"><a href="#"><i class="fab twitter footer-social-icon fa-twitter"></i></i></a></li>
-                                <li class="list-inline-item"><a href="#"><i class="fab google footer-social-icon fa-google"></i></i></a></li>
-                                <!-- <li class="list-inline-item"><a href="#"><i class="fab apple footer-social-icon fa-apple"></i></i></a></li> -->
-                            </ul>
+    <!-- Carousel Section -->
+    <section class="carousel-section">
+        <div class="carousel-container">
+            <div class="carousel-wrapper" id="carouselWrapper">
+                <div class="carousel-slide">
+                    <img src="https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&h=400&fit=crop" alt="AI Technology">
+                    <div class="carousel-overlay">
+                        <div class="carousel-text">
+                            <h3>Machine Learning Revolution</h3>
+                            <p>Transforming data into intelligent insights</p>
                         </div>
                     </div>
                 </div>
-
+                <div class="carousel-slide">
+                    <img src="https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=800&h=400&fit=crop" alt="Neural Networks">
+                    <div class="carousel-overlay">
+                        <div class="carousel-text">
+                            <h3>Neural Network Intelligence</h3>
+                            <p>Mimicking human brain processes</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="carousel-slide">
+                    <img src="https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=800&h=400&fit=crop" alt="AI Automation">
+                    <div class="carousel-overlay">
+                        <div class="carousel-text">
+                            <h3>Intelligent Automation</h3>
+                            <p>Streamlining complex processes</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="carousel-slide">
+                    <img src="https://images.unsplash.com/photo-1507146426996-ef05306b995a?w=800&h=400&fit=crop" alt="Future Technology">
+                    <div class="carousel-overlay">
+                        <div class="carousel-text">
+                            <h3>Future Technology Today</h3>
+                            <p>Building tomorrow's solutions now</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="carousel-nav carousel-prev" onclick="prevSlide()">
+                <i class="fas fa-chevron-left"></i>
+            </div>
+            <div class="carousel-nav carousel-next" onclick="nextSlide()">
+                <i class="fas fa-chevron-right"></i>
             </div>
         </div>
+        <div class="carousel-dots" id="carouselDots">
+            <div class="carousel-dot active" onclick="currentSlide(1)"></div>
+            <div class="carousel-dot" onclick="currentSlide(2)"></div>
+            <div class="carousel-dot" onclick="currentSlide(3)"></div>
+            <div class="carousel-dot" onclick="currentSlide(4)"></div>
+        </div>
+    </section>
 
-        <div class="text-center mt-5">
-            <p class="footer-alt mb-0 f-14">2023 © Mamoudou Diallo The data science is an intellectual adventure to discover treasures within the mountains of data., All Rights Reserved</p>
+    <!-- About Section -->
+    <section class="about-section" id="about">
+        <div class="about-content fade-in">
+            <h2 class="about-title">About Int.Art</h2>
+            <p class="about-description">
+                Artificial Intelligence (AI) refers to the simulation of human intelligence in machines programmed to think, learn, and make decisions. It powers applications like voice assistants, autonomous vehicles, and advanced data analytics. AI uses technologies such as machine learning, natural language processing, and computer vision to perform tasks typically requiring human intelligence.
+            </p>
+        </div>
+
+        <div class="features-grid">
+            <div class="feature-card fade-in">
+                <div class="feature-icon">
+                    <i class="fas fa-cogs"></i>
+                </div>
+                <h3 class="feature-title">Process Optimization</h3>
+                <p class="feature-description">AI automates complex tasks like supply chain management, predictive machine maintenance, and route optimization, reducing costs and increasing efficiency.</p>
+            </div>
+
+            <div class="feature-card fade-in">
+                <div class="feature-icon">
+                    <i class="fas fa-heartbeat"></i>
+                </div>
+                <h3 class="feature-title">Healthcare Innovation</h3>
+                <p class="feature-description">With tools like AI-assisted diagnosis and disease prediction, AI can personalize treatments, accelerate medical research, and improve patient care.</p>
+            </div>
+
+            <div class="feature-card fade-in">
+                <div class="feature-icon">
+                    <i class="fas fa-shopping-cart"></i>
+                </div>
+                <h3 class="feature-title">Enhanced Customer Experience</h3>
+                <p class="feature-description">AI-powered chatbots and recommendation systems deliver personalized interactions and relevant suggestions, increasing customer satisfaction and loyalty.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Video CTA Section -->
+    <section class="video-cta" id="signup">
+        <video class="video-background" autoplay muted loop>
+            <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4" type="video/mp4">
+        </video>
+        <div class="video-overlay"></div>
+        <div class="video-content">
+            <h2 class="video-title">Join the AI Revolution</h2>
+            <p class="video-subtitle">Discover the future and unlock endless possibilities</p>
+            <a href="{% url 'inscription' %}" class="video-cta-button">
+                <i class="fas fa-user-plus"></i>
+                Free Registration
+            </a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer" id="contact">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Information</h3>
+                <ul>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#benefits">Benefits</a></li>
+                    <li><a href="#features">Features</a></li>
+                    <li><a href="#prospects">The Prospects</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Resources</h3>
+                <ul>
+                    <li><a href="#">Documentation</a></li>
+                    <li><a href="#">Video Tutorials</a></li>
+                    <li><a href="#">API Reference</a></li>
+                    <li><a href="#">Community</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Support</h3>
+                <ul>
+                    <li><a href="#">Help Center</a></li>
+                    <li><a href="#">Contact Us</a></li>
+                    <li><a href="#">Terms of Service</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Contact Us</h3>
+                <p>diallomamoud298@gmail.com</p>
+                <p>+225 0758504822</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 Mamoudou Diallo - Int.Art. The data science is an intellectual adventure to discover treasures within the mountains of data. All Rights Reserved.</p>
         </div>
     </footer>
-	
-	  <script
-			src="{% static 'js/enregistrement/main.js'%}"
-		
-	  ></script>
+
+    <script>
+        // Remove loading screen
+        window.addEventListener('load', function() {
+            setTimeout(() => {
+                document.querySelector('.loading-screen').classList.add('hidden');
+            }, 1000);
+        });
+
+        // Navbar scroll effect
+        window.addEventListener('scroll', function() {
+            const navbar = document.querySelector('.navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+
+            // Update scroll progress
+            const scrollProgress = document.querySelector('.scroll-progress');
+            const scrollPercent = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
+            scrollProgress.style.width = scrollPercent + '%';
+        });
+
+        // Carousel functionality
+        let currentSlideIndex = 0;
+        const slides = document.querySelectorAll('.carousel-slide');
+        const dots = document.querySelectorAll('.carousel-dot');
+        const totalSlides = slides.length;
+
+        function showSlide(index) {
+            const wrapper = document.getElementById('carouselWrapper');
+            wrapper.style.transform = `translateX(-${index * 100}%)`;
+            
+            dots.forEach(dot => dot.classList.remove('active'));
+            dots[index].classList.add('active');
+        }
+
+        function nextSlide() {
+            currentSlideIndex = (currentSlideIndex + 1) % totalSlides;
+            showSlide(currentSlideIndex);
+        }
+
+        function prevSlide() {
+            currentSlideIndex = (currentSlideIndex - 1 + totalSlides) % totalSlides;
+            showSlide(currentSlideIndex);
+        }
+
+        function currentSlide(index) {
+            currentSlideIndex = index - 1;
+            showSlide(currentSlideIndex);
+        }
+
+        // Auto-play carousel
+        setInterval(() => {
+            nextSlide();
+        }, 5000);
+
+        // Fade in animation on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fade-in').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Mobile menu toggle (basic implementation)
+        document.querySelector('.mobile-menu').addEventListener('click', function() {
+            const navLinks = document.querySelector('.nav-links');
+            navLinks.style.display = navLinks.style.display === 'flex' ? 'none' : 'flex';
+        });
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Add some interactive particles effect
+        function createParticle() {
+            const particle = document.createElement('div');
+            particle.style.cssText = `
+                position: fixed;
+                width: 4px;
+                height: 4px;
+                background: var(--accent-color);
+                border-radius: 50%;
+                pointer-events: none;
+                opacity: 0;
+                z-index: -1;
+            `;
+            
+            particle.style.left = Math.random() * window.innerWidth + 'px';
+            particle.style.top = window.innerHeight + 'px';
+            
+            document.body.appendChild(particle);
+            
+            const animation = particle.animate([
+                { transform: 'translateY(0px)', opacity: 0 },
+                { transform: 'translateY(-20px)', opacity: 1 },
+                { transform: `translateY(-${window.innerHeight + 100}px)`, opacity: 0 }
+            ], {
+                duration: Math.random() * 3000 + 2000,
+                easing: 'linear'
+            });
+            
+            animation.addEventListener('finish', () => {
+                particle.remove();
+            });
+        }
+
+        // Create particles occasionally
+        setInterval(createParticle, 3000);
+
+        // Performance optimization: Reduce animations on lower-end devices
+        if (navigator.hardwareConcurrency < 4) {
+            document.documentElement.style.setProperty('--animation-duration', '0.3s');
+        }
+    </script>
 </body>
 </html>
